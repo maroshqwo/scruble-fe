@@ -17,9 +17,7 @@ export const useAuth = (onMount = false) => {
     [dispatch],
   );
 
-  const logout = React.useCallback(() => {
-    dispatch(logoutAction());
-  }, [dispatch]);
+  const logout = React.useCallback(() => dispatch(logoutAction()), [dispatch]);
 
   const getUser = React.useCallback(() => dispatch(getUserAction()), [dispatch]);
 

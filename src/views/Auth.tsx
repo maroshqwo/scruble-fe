@@ -1,39 +1,34 @@
-import React, { FC, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@chakra-ui/react";
-import AuthComponent from "@/components/auth/AuthComponent";
-import { useAuth } from "@/hooks/auth";
+import React, { FC } from "react";
+import { VStack, Button, useColorModeValue } from "@chakra-ui/react";
+import Login from "@/components/auth/Login";
+import Register from "@/components/auth/Register";
 
 export type AuthProps = {
   /* insert props */
 }
 
 export const Auth: FC<AuthProps> = (props) => {
-  const { isLoggedIn, getUser } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("isLoggedIn Changed");
-    if (!isLoggedIn) {
-      getUser()
-        .unwrap()
-        .then(() => {
-          if (isLoggedIn) {
-            navigate("/");
-          }
-        })
-        .catch(() => {
-          console.log("Unauthorized, redirecting to auth");
-        });
-    } else {
-      navigate("/");
-    }
-  }, [isLoggedIn]);
+  const [displayed, setDisplayed] = React.useState("login");
+  const bgColor = useColorModeValue("gray.50", "#182331");
 
   return (
-    <div>
-      <AuthComponent />
-    </div>
+    <VStack
+      w="500px"
+      m={displayed === "login" ? "calc(50vh - 157px) auto" : "calc(50vh - 265px) auto"}
+      borderRadius="lg"
+      shadow="lg"
+      bg={bgColor}
+      p={4}
+    >
+      {displayed === "login" ? <Login /> : <Register />}
+      <Button
+        onClick={() => (displayed === "login" ? setDisplayed("register") : setDisplayed("login"))}
+        colorScheme="teal"
+        variant="link"
+      >
+        {displayed === "login" ? "Register here!" : "Sign in!"}
+      </Button>
+    </VStack>
   );
 };
 

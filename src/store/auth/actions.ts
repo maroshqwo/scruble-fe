@@ -8,6 +8,7 @@ import {
 } from "@/api/auth/types";
 import { thunkHandler } from "@/utils/general";
 import Api from "@/api";
+import { User, UserUpdate } from "@/types";
 
 export const loginAction = createAsyncThunk<LoginResponse, LoginDto>(
   "auth/login",
@@ -21,6 +22,8 @@ export const registerAction = createAsyncThunk<RegisterResponse, RegisterDto>(
 
 export const logoutAction = createAsyncThunk("auth/logout", async () => Api.auth.logout());
 
-export const getUserAction = createAsyncThunk<any, undefined>("auth/getUser", () => Api.auth.getUser().catch((err) => {
-  throw new Error(err);
-}));
+export const getUserAction = createAsyncThunk("auth/getUser", async () => Api.auth.getUser());
+export const updateUserAction = createAsyncThunk<User, UserUpdate>(
+  "auth/updateUser",
+  async (data, thunkApi) => thunkHandler(Api.user.updateUser(data), thunkApi),
+);

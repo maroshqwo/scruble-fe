@@ -1,9 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Socket from "@/socket";
+import { getSocket } from "@/store/socket/selectors";
 
 export const useSocket = () => {
-  const { isConnected } = Socket.global;
+  const dispatch = useDispatch();
+  const socketState = useSelector(getSocket);
   const socket = Socket.global;
+  const { isConnectedGlobal } = socketState;
 
   const hello = () => {
     socket.hello({ message: "this" });
@@ -13,10 +17,20 @@ export const useSocket = () => {
     Socket.global.connect();
   };
 
+  const disconnectGlobal = () => {
+    Socket.global.disconnect();
+  };
+
+  const setConnected = (connected: boolean) => {
+    // setIsConnectedGlobal(connected);
+  };
+
   return {
     hello,
-    isConnectedGlobal: useMemo(() => isConnected, [isConnected]),
+    isConnectedGlobal,
     connectGlobal,
+    disconnectGlobal,
+    setConnected,
   };
 };
 

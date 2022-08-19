@@ -71,8 +71,6 @@ const themeSlice = createSlice({
   initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<string>) => {
-      console.log("theming");
-      console.log(action.payload);
       switch (action.payload) {
         case "light":
           Object.assign(state, Light);

@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { loginAction, registerAction, getUserAction } from "./actions";
+import {
+  loginAction,
+  logoutAction,
+  registerAction,
+  getUserAction,
+  updateUserAction,
+} from "./actions";
 import { User } from "../../types/auth";
 
 export type AuthState = {
@@ -24,11 +30,6 @@ const authSlice = createSlice({
     setAccessToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
     },
-    logoutAction: (state) => {
-      state.accessToken = null;
-      state.user = null;
-      state.isLoggedIn = false;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(loginAction.pending, (state) => {
@@ -42,6 +43,16 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAction.rejected, (state) => {
       state.isLogging = false;
+      state.isLoggedIn = false;
+      state.user = null;
+      state.accessToken = null;
+    });
+    builder.addCase(logoutAction.fulfilled, (state) => {
+      state.isLoggedIn = false;
+      state.user = null;
+      state.accessToken = null;
+    });
+    builder.addCase(logoutAction.rejected, (state) => {
       state.isLoggedIn = false;
       state.user = null;
       state.accessToken = null;
@@ -62,6 +73,9 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
     });
+    builder.addCase(getUserAction.pending, (state, action) => {
+      state.isLoggedIn = false;
+    });
     builder.addCase(getUserAction.fulfilled, (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload.data;
@@ -70,9 +84,13 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     });
+    builder.addCase(updateUserAction.fulfilled, (state, action) => {
+      state.user = action.payload;
+    });
+    builder.addCase(updateUserAction.rejected, (state, action) => {});
   },
 });
 
-export const { setAccessToken, logoutAction } = authSlice.actions;
+export const { setAccessToken } = authSlice.actions;
 const authReducer = authSlice.reducer;
 export default authReducer;

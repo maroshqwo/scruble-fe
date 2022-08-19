@@ -7,7 +7,6 @@ export default class ChatService extends SocketService {
   }
 
   hello = (data: DummyType) => {
-    console.log("here is the data", data);
     this.emit("hello", { message: "this" });
   };
 }
